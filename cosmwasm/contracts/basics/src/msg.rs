@@ -5,7 +5,7 @@ pub enum QueryMsg {
     Greet { name: String },
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
 pub struct GreetResp {
     pub message: String,
 }
