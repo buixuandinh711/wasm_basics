@@ -6,3 +6,4 @@ resolver = "2"
 cosmwasm-std = { version = "2.0.4", features = ["staking"] }
 serde = { version = "1.0.203", default-features = false, features = ["derive"] }
 cw-multi-test = "2.0.1"
+cw-storage-plus = "2.0.0"

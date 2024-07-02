@@ -1,11 +1,22 @@
-use cosmwasm_std::StdResult;
+use cosmwasm_std::{Deps, StdResult};
 
-use crate::msg::GreetResp;
+use crate::{
+    msg::{AdminsResp, GreetResp},
+    state::ADMINS,
+};
 
-pub fn greet(name: &str) -> StdResult<GreetResp> {
+pub fn query_greeting(name: &str) -> StdResult<GreetResp> {
     let resp = GreetResp {
         message: format!("Hello {} from wasm contract", name),
     };
+
+    Ok(resp)
+}
+
+pub fn query_admins(deps: Deps) -> StdResult<AdminsResp> {
+    let admins = ADMINS.load(deps.storage)?;
+
+    let resp = AdminsResp { admins };
 
     Ok(resp)
 }
@@ -15,10 +26,10 @@ mod test {
     use super::*;
 
     #[test]
-    fn greet_return_right_name() {
+    fn query_greeting_given_a_name_returns_right_greeting() {
         let name = "Alice";
 
-        let resp = greet(name);
+        let resp = query_greeting(name);
 
         let expected_resp = Ok(GreetResp {
             message: "Hello Alice from wasm contract".to_owned(),
