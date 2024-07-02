@@ -1,0 +1,1 @@
+wasmd tx wasm store $1 --from alice --gas auto --gas-adjustment 1.15 --yes

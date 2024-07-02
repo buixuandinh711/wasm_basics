@@ -1,0 +1,1 @@
+wasmd query wasm list-code

@@ -1,26 +1,18 @@
-use cosmwasm_std::{entry_point, Binary, Deps, DepsMut, Empty, Env, MessageInfo, Response, StdResult};
-use serde::{Deserialize, Serialize};
+mod contract;
+pub mod msg;
+mod query;
 
-#[derive(Serialize, Deserialize)]
-struct QueryResp {
-    message: String,
+use cosmwasm_std::{
+    entry_point, Binary, Deps, DepsMut, Empty, Env, MessageInfo, Response, StdResult,
+};
+use msg::QueryMsg;
+
+#[entry_point]
+pub fn instantiate(deps: DepsMut, env: Env, info: MessageInfo, msg: Empty) -> StdResult<Response> {
+    contract::instantiate(deps, env, info, msg)
 }
 
 #[entry_point]
-pub fn instantiate(
-    _deps: DepsMut,
-    _env: Env,
-    _info: MessageInfo,
-    _msg: Empty,
-) -> StdResult<Response> {
-    Ok(Response::new())
-}
-
-#[entry_point]
-pub fn query(_dep: Deps, _env: Env, _msg: Empty) -> StdResult<Binary> {
-    let resp = QueryResp {
-        message: "World hellos you".to_owned(),
-    };
-
-    cosmwasm_std::to_json_binary(&resp)
+pub fn query(dep: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    contract::query(dep, env, msg)
 }
