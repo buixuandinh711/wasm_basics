@@ -1,0 +1,7 @@
+[workspace]
+members = ["contracts/*"]
+resolver = "2"
+
+[workspace.dependencies]
+cosmwasm-std = { version = "2.0.4", features = ["staking"] }
+serde = { version = "1.0.203", default-features = false, features = ["derive"] }
