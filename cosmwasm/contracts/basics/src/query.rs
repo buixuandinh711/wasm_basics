@@ -1,11 +1,12 @@
-use cosmwasm_std::{Deps, StdResult};
+use cosmwasm_std::Deps;
 
 use crate::{
+    error::ContractResult,
     msg::{AdminsResp, GreetResp},
     state::ADMINS,
 };
 
-pub fn query_greeting(name: &str) -> StdResult<GreetResp> {
+pub fn query_greeting(name: &str) -> ContractResult<GreetResp> {
     let resp = GreetResp {
         message: format!("Hello {} from wasm contract", name),
     };
@@ -13,7 +14,7 @@ pub fn query_greeting(name: &str) -> StdResult<GreetResp> {
     Ok(resp)
 }
 
-pub fn query_admins(deps: Deps) -> StdResult<AdminsResp> {
+pub fn query_admins(deps: Deps) -> ContractResult<AdminsResp> {
     let admins = ADMINS.load(deps.storage)?;
 
     let resp = AdminsResp { admins };

@@ -12,6 +12,7 @@ crate-type = ["cdylib"]
 cosmwasm-std = { workspace = true }
 serde = { workspace = true }
 cw-storage-plus = { workspace = true }
+thiserror = { workspace = true }
 
 [dev-dependencies]
 cw-multi-test = { workspace = true }
