@@ -111,3 +111,51 @@ fn add_members_given_new_members_updates_admins_list_properly() {
 
     assert_eq!(updated_admin, expected_admins);
 }
+
+#[test]
+fn add_members_given_new_members_emit_event_properly() {
+    let default_admins = get_default_admins();
+    let (mut app, contract_addr) = setup(default_admins.clone());
+
+    let new_members = vec!["member1".into_bech32(), "member2".into_bech32()];
+
+    let execute_msg = ExecuteMsg::AddMembers {
+        members: new_members
+            .clone()
+            .into_iter()
+            .map(|addr| addr.to_string())
+            .collect(),
+    };
+
+    let sender = default_admins[0].clone();
+
+    let execute_resp = app
+        .execute_contract(sender, contract_addr.clone(), &execute_msg, &[])
+        .unwrap();
+
+    let events = execute_resp
+        .events
+        .into_iter()
+        .find(|e| e.ty == "wasm-admin_added")
+        .unwrap();
+
+    let added_addresses: Vec<_> = events
+        .attributes
+        .into_iter()
+        .filter_map(|attr| {
+            if attr.key == "addr" {
+                Some(attr.value)
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    let expected_addresses: Vec<_> = new_members
+        .into_iter()
+        .map(|addr| addr.to_string())
+        .collect();
+
+    assert_eq!(added_addresses, expected_addresses);
+}
+

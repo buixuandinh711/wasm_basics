@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use cosmwasm_std::{Addr, DepsMut, MessageInfo, Response, StdResult};
+use cosmwasm_std::{Addr, DepsMut, Event, MessageInfo, Response, StdResult};
 
 use crate::{error::ContractError, state::ADMINS};
 
@@ -20,11 +20,14 @@ pub fn add_members(
 
     let mut duplicated_addr = vec![];
 
+    let mut events = Event::new("admin_added");
+
     for addr in new_admins.unwrap() {
         if cur_admin.contains(&addr) {
             duplicated_addr.push(addr);
         } else {
-            cur_admin.insert(addr);
+            cur_admin.insert(addr.clone());
+            events = events.add_attribute("addr", addr);
         }
     }
 
@@ -36,7 +39,9 @@ pub fn add_members(
 
     ADMINS.save(deps.storage, &cur_admin.into_iter().collect())?;
 
-    Ok(Response::new())
+    let resp = Response::new().add_event(events);
+
+    Ok(resp)
 }
 
 pub fn leave(deps: DepsMut, info: MessageInfo) -> Result<Response, ContractError> {
@@ -48,7 +53,11 @@ pub fn leave(deps: DepsMut, info: MessageInfo) -> Result<Response, ContractError
 
     cur_admin.retain(|addr| addr != sender);
 
-    Ok(Response::new())
+    let event = Event::new("admin_leaved").add_attribute("addr", sender.to_string());
+
+    let resp = Response::new().add_event(event);
+
+    Ok(resp)
 }
 
 fn check_admin_permission(deps: &DepsMut, info: &MessageInfo) -> Result<(), ContractError> {
