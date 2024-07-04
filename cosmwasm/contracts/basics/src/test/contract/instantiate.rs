@@ -15,7 +15,10 @@ fn instantiate_with_no_address_stores_no_admin() {
     let code = ContractWrapper::new(execute, instantiate, query);
     let code_id = app.store_code(Box::new(code));
 
-    let instantiate_msg = InstantiateMsg { admins: vec![] };
+    let instantiate_msg = InstantiateMsg {
+        admins: vec![],
+        donation_denom: "".to_owned(),
+    };
 
     let addr = app
         .instantiate_contract(
@@ -51,6 +54,7 @@ fn instantiate_with_2_address_stores_2_admins() {
             "admin1".into_bech32().to_string(),
             "admin2".into_bech32().to_string(),
         ],
+        donation_denom: "".to_owned(),
     };
 
     let addr = app

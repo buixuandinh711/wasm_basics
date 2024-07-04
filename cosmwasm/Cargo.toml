@@ -8,3 +8,4 @@ serde = { version = "1.0.203", default-features = false, features = ["derive"] }
 cw-multi-test = "2.0.1"
 cw-storage-plus = "2.0.0"
 thiserror = "1.0.61"
+cw-utils = "2.0.0"

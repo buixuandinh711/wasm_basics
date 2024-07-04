@@ -5,7 +5,7 @@ use crate::{
     execute as execute_mod,
     msg::{ExecuteMsg, InstantiateMsg, QueryMsg},
     query as query_mod,
-    state::ADMINS,
+    state::{ADMINS, DONATION_DENOM},
 };
 
 pub fn instantiate(
@@ -21,6 +21,7 @@ pub fn instantiate(
         .collect();
 
     ADMINS.save(deps.storage, &admins?)?;
+    DONATION_DENOM.save(deps.storage, &msg.donation_denom)?;
 
     Ok(Response::new())
 }
@@ -38,12 +39,13 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> ContractResult<Binary> {
 
 pub fn execute(
     deps: DepsMut,
-    _env: Env,
+    env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,
 ) -> ContractResult<Response> {
     match msg {
         ExecuteMsg::AddMembers { members } => execute_mod::add_members(deps, info, members),
         ExecuteMsg::Leave {} => execute_mod::leave(deps, info),
+        ExecuteMsg::Donate {} => execute_mod::donate(deps, env, info),
     }
 }

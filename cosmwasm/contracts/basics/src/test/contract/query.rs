@@ -19,7 +19,10 @@ fn query_greet_return_right_greet_with_name() {
         .instantiate_contract(
             code_id,
             Addr::unchecked("owner"),
-            &InstantiateMsg { admins: vec![] },
+            &InstantiateMsg {
+                admins: vec![],
+                donation_denom: "".to_owned(),
+            },
             &[],
             "basics",
             None,
